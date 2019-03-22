@@ -81,6 +81,8 @@ FlutterMethodChannel *_channel;
     BOOL success = [[AVAudioSession sharedInstance]
                     setCategory:AVAudioSessionCategoryPlayback
                     error:&error];
+    [[MPRemoteCommandCenter sharedCommandCenter].togglePlayPauseCommand addTarget:self action:@selector(remoteControlReceivedWithEvent:)];
+    
     if (!success) {
         NSLog(@"Error setting speaker");
         
@@ -187,6 +189,30 @@ FlutterMethodChannel *_channel;
                              ofObject:object
                                change:change
                               context:context];
+    }
+}
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)receivedEvent {
+    
+    if (receivedEvent.type == UIEventTypeRemoteControl) {
+        
+        switch (receivedEvent.subtype) {
+                
+            case UIEventSubtypeRemoteControlTogglePlayPause:
+                [self playOrStop: nil];
+                break;
+                
+            case UIEventSubtypeRemoteControlPreviousTrack:
+                [self previousTrack: nil];
+                break;
+                
+            case UIEventSubtypeRemoteControlNextTrack:
+                [self nextTrack: nil];
+                break;
+                
+            default:
+                break;
+        }
     }
 }
 
