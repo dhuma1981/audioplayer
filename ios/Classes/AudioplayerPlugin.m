@@ -198,17 +198,22 @@ FlutterMethodChannel *_channel;
         
         switch (receivedEvent.subtype) {
                 
-            case UIEventSubtypeRemoteControlTogglePlayPause:
-                [self playOrStop: nil];
+            case UIEventSubtypeRemoteControlPlay:{
+                NSString *url = call.arguments[@"url"];
+                int isLocal = [call.arguments[@"isLocal"] intValue];
+                [self play:url isLocal:isLocal];
+               
+            }
+                break;
+            
+            case UIEventSubtypeRemoteControlPause:{
+                [self stop];
+               
+                
+            }
                 break;
                 
-            case UIEventSubtypeRemoteControlPreviousTrack:
-                [self previousTrack: nil];
-                break;
-                
-            case UIEventSubtypeRemoteControlNextTrack:
-                [self nextTrack: nil];
-                break;
+            
                 
             default:
                 break;
